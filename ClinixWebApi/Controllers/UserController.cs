@@ -1,4 +1,5 @@
-﻿using ClinixWebApi.Context;
+﻿using System.Text.Json;
+using ClinixWebApi.Context;
 using ClinixWebApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,10 +27,9 @@ namespace ClinixWebApi.Controllers
             if (user == null)
                 return NotFound(new { Message = " User not Found !" });
 
-            return Ok(new
-            {
-                Message = "Login Success !"
-            });
+            string userJson = JsonSerializer.Serialize<User>(user);
+
+            return Ok(userJson);
 
 
 
