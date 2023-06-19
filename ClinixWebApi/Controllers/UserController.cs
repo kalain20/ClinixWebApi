@@ -30,10 +30,6 @@ namespace ClinixWebApi.Controllers
             string userJson = JsonSerializer.Serialize<User>(user);
 
             return Ok(userJson);
-
-
-
-
         }
 
         [HttpPost("register")]
