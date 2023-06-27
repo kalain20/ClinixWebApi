@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using ClinixWebApi.Context;
+using ClinixWebApi.Helpers;
 using ClinixWebApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,13 +17,17 @@ namespace ClinixWebApi.Controllers
         {
             _context = context;
         }
-
+        /// <summary>
+        /// Fonction permettant de faire l'authentification
+        /// </summary>
+        /// <param name="users"></param>
+        /// <returns></returns>
         [HttpPost("Authenticate")]
         public async Task<IActionResult> Authenticate([FromBody] User users)
         {
             if (users == null)
                 return BadRequest();
-
+            users.Password = Helper.HashingString(users.Password);
             var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == users.UserName && x.Password == users.Password);
             if (user == null)
                 return NotFound(new { Message = " User not Found !" });
@@ -31,16 +36,20 @@ namespace ClinixWebApi.Controllers
 
             return Ok(userJson);
         }
-
+        /// <summary>
+        /// Fonction permettant d'enroller un utilisateur
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterUser([FromBody] User users)
+        public async Task<IActionResult> RegisterUser([FromBody] User user)
         {
-            if (users == null)
+            if (user == null)
                 return BadRequest();
-
-            await _context.Users.AddAsync(users);
+            user.Password = Helper.HashingString(user.Password);
+            await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
-
+            
             return Ok(new
                 {
                     Message = "User Registered !"

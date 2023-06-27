@@ -6,7 +6,7 @@
         public string PatientState { get; set; }
         public string Photo { get; set; }
         public Doctor Doctor { get; set; }
-        public Nurse? Nurse { get; set; }
-        public Beneficiary? Beneficiary { get; set; }
+        public Nurse Nurse { get; set; }
+        public Beneficiary Beneficiary { get; set; }
     }
 }
